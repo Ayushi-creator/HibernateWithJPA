@@ -17,11 +17,13 @@ public class JpaUtil {
     private static final EmbeddedCacheManager cacheManager;
 
     static {
-        // Step 1: Infinispan GlobalConfig — local mode (no clustering)
+        // Step 1
         GlobalConfigurationBuilder globalBuilder = new GlobalConfigurationBuilder();
-        globalBuilder.nonClusteredDefault();
+        globalBuilder
+                .nonClusteredDefault()
+                ;
 
-        // Step 2: Default cache config
+// Step 2: Default cache config
         ConfigurationBuilder defaultCacheConfig = new ConfigurationBuilder();
         defaultCacheConfig
                 .expiration()
@@ -30,12 +32,9 @@ public class JpaUtil {
                 .memory()
                 .maxCount(1000);
 
-        // Step 3: CacheManager banao
-        cacheManager = new DefaultCacheManager(
-                globalBuilder.build(),
-                defaultCacheConfig.build()
-        );
-
+// Step 3: CacheManager banao
+        cacheManager = new DefaultCacheManager(globalBuilder.build());
+        cacheManager.defineConfiguration("default", defaultCacheConfig.build());
         // Step 4: Employee entity ke liye specific cache define karo
         ConfigurationBuilder employeeCacheConfig = new ConfigurationBuilder();
         employeeCacheConfig
